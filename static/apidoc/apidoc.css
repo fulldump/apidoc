@@ -1,0 +1,178 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+.panel-index .border {
+  padding: 16px;
+  border: solid silver 1px;
+  background-color: #F4F4F4;
+}
+
+.panel-index .methods {
+  padding-left: 16px;
+}
+
+.panel-index ol,
+.panel-index ul {
+  display: block;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.panel-index li {
+  display: block;
+}
+
+.panel-index li li {
+  margin-left: 16px;
+}
+
+.panel-index li > a {
+  display: block;
+}
+
+.panel-index li a {
+  color: #337ab7;
+  text-decoration: none;
+}
+
+.panel-index li a:hover {
+  color: #23527c;
+  text-decoration: underline;
+}
+
+.panel-content .border {
+  padding: 16px;
+}
+
+.panel-index [method] {
+  display: inline-block;
+  font-size: 80%;
+  font-weight: bold;
+  padding: 1px 3px;
+  color: white !important;
+  margin-right: 2px;
+  border: solid silver 1px;
+  border-radius: 3px;
+}
+
+[method="OPTIONS"] {
+  background-color: #0f6ab4;
+}
+
+[method="HEAD"] {
+  background-color: #ffd20f;
+}
+
+[method="GET"] {
+  background-color: #0f6ab4;
+}
+
+[method="POST"] {
+  background-color: #10a54a;
+}
+
+[method="PATCH"] {
+  background-color: #D38042;
+}
+
+[method="PUT"] {
+  background-color: #c5862b;
+}
+
+[method="DELETE"] {
+  background-color: #a41e22;
+}
+
+.title-method {
+  overflow: hidden;
+  border-radius: 3px;
+}
+
+.title-method [method] {
+  display: inline-block;
+  height: 100%;
+  color: white;
+  padding: 0 6px;
+}
+
+.title-method[method="OPTIONS"] {
+  background-color: #e7f0f7;
+}
+
+.title-method[method="HEAD"] {
+  background-color: #fcffcd;
+}
+
+.title-method[method="GET"] {
+  background-color: #e7f0f7;
+}
+
+.title-method[method="POST"] {
+  background-color: #e7f6ec;
+}
+
+.title-method[method="PATCH"] {
+  background-color: #FCE9E3;
+}
+
+.title-method[method="PUT"] {
+  background-color: #f9f2e9;
+}
+
+.title-method[method="DELETE"] {
+  background-color: #f5e8e8;
+}
+
+marked pre code {
+  display: block;
+  padding: 16px;
+  background-color: #f7f7f7;
+  border-radius: 3px;
+  white-space: pre;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, 'Ubuntu Mono', monospace;
+  overflow-x: auto;
+}
+
+.response {
+  display: block;
+  padding: 16px;
+  background-color: #fcf6db;
+  border: 1px solid #e5e0c6;
+  white-space: pre;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, 'Ubuntu Mono', monospace;
+  overflow-x: auto;
+}
+
+@media screen and (min-width: 700px) {
+
+  .panel-index {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 300px;
+  }
+
+  .panel-index .border {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  .panel-content {
+    margin-left: 300px;
+  }
+
+  .panel-content .border {
+    max-width: 1000px;
+    margin: auto;
+  }
+
+}
+
+
