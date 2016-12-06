@@ -14,7 +14,10 @@
 	</head>
 	<body ng-controller="MainCtrl as main">
 
-		<div class="document-title">Apidoc</div>
+		<div class="printable-header">
+			<div class="document-title">{{main.doc.title}}</div>
+			<div class="document-subtitle">{{main.doc.subtitle}}</div>
+		</div>
 
 		<div class="panel-index">
 			<div class="border">
@@ -46,6 +49,11 @@
 		<div class="panel-content">
 			<div class="border">
 
+				<div class="screen-header">
+					<div class="document-title">{{main.doc.title}}</div>
+					<div class="document-subtitle">{{main.doc.subtitle}}</div>
+				</div>
+
 				<h1 id="Endpoints">Endpoints</h1>
 				<div ng-repeat="(title,endpoint) in main.doc.endpoints">
 					<h2 class="endpoint-title" id="{{title}}">{{title}}</h2>
@@ -53,14 +61,19 @@
 						<span ng-repeat="interceptor in endpoint.interceptors"><a class="interceptor" href="#Interceptor-{{interceptor}}" title="Interceptor {{interceptor}}"> {{interceptor}} </a><span class="interceptor-separator"> > </span></span>
 					</div>
 					<marked class="description" content="endpoint.description"></marked>
-					<div ng-repeat="(method_name, method) in endpoint.methods">
+					<div class="method" method="{{method_name}}" ng-repeat="(method_name, method) in endpoint.methods">
 						<h3 class="title-method" method="{{method_name}}" id="{{method_name}}-{{title}}">
-							<span method="{{method_name}}">{{method_name}}</span>
+							<span class="label-method" method="{{method_name}}">{{method_name}}</span>
 							<span ng-repeat="part in endpoint.url">/<span ng-hide="part.isparam">{{part.name}}</span><span ng-show="part.isparam" ng-model="endpoint.parameters[part.name].value" contenteditable=""></span></span>
-							<span class="name-method">{{method.name}}</span>
-							<button ng-click="main.request(method_name, endpoint, method)">Send</button>
+							<div class="right">
+								<span class="name-method">{{method.name}}</span>
+								<button ng-click="main.request(method_name, endpoint, method)">Send</button>
+							</div>
 						</h3>
-						<div class="detail-method" ng-show="method.response||method.description">
+						<div class="detail-method" ng-show="method.response||method.description||method.bodyshow">
+							<div ng-show="method.bodyshow" class="method-body" valid-json="{{main.valid_json(method.body)}}">
+								<textarea ng-model="method.body"></textarea>
+							</div>
 							<div ng-show="method.response" class="response">{{method.response}}</div>
 							<marked class="description" content="method.description">{{method.description}}</marked>
 						</div>

@@ -8,7 +8,17 @@ import (
 	"github.com/fulldump/golax"
 )
 
-func Build(a *golax.Api) {
+type Apidoc struct {
+	Title    string
+	Subtitle string
+}
+
+func Build(a *golax.Api) *Apidoc {
+
+	apidoc := &Apidoc{
+		Title:    "Apidoc",
+		Subtitle: "Api documentation",
+	}
 
 	doc := a.Root.
 		Node("doc").
@@ -41,8 +51,8 @@ func Build(a *golax.Api) {
 	static.
 		Node("{{*}}").
 		Method("GET", func(c *golax.Context) {
-		readfile(c, c.Parameter)
-	})
+			readfile(c, c.Parameter)
+		})
 
 	doc.
 		Node("json").
@@ -51,12 +61,14 @@ func Build(a *golax.Api) {
 		`}).
 		Method("GET", func(c *golax.Context) {
 
-		c.Response.Header().Add("Content-Type", "application/json")
+			c.Response.Header().Add("Content-Type", "application/json")
 
-		j := NewNodeJson(a)
-		RunJsonDoc(j)
-		json.NewEncoder(c.Response).Encode(j.JsonDoc)
-	})
+			j := NewNodeJson(a)
+			RunJsonDoc(j)
+			j.JsonDoc.Title = apidoc.Title
+			j.JsonDoc.Subtitle = apidoc.Subtitle
+			json.NewEncoder(c.Response).Encode(j.JsonDoc)
+		})
 
 	doc.
 		Node("md").
@@ -64,14 +76,14 @@ func Build(a *golax.Api) {
 			Documentation in markdown format.
 		`}).
 		Method("GET", func(c *golax.Context) {
-		PrintApiMd(NodePrint{
-			Api:             a,
-			Node:            a.Root,
-			Context:         c,
-			Path:            a.Prefix,
-			AllInterceptors: map[*golax.Interceptor]*golax.Interceptor{},
+			PrintApiMd(NodePrint{
+				Api:             a,
+				Node:            a.Root,
+				Context:         c,
+				Path:            a.Prefix,
+				AllInterceptors: map[*golax.Interceptor]*golax.Interceptor{},
+			})
 		})
-	})
 
 	doc.
 		Node("html").
@@ -79,8 +91,8 @@ func Build(a *golax.Api) {
 			Documentation in html format.
 		`}).
 		Method("GET", func(c *golax.Context) {
-		c.Error(501, "Unimplemented")
-	})
+			c.Error(501, "Unimplemented")
+		})
 
 	swagger := doc.
 		Node("swagger").
@@ -91,4 +103,5 @@ func Build(a *golax.Api) {
 		c.Error(501, "Unimplemented")
 	})
 
+	return apidoc
 }

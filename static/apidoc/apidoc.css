@@ -3,8 +3,20 @@ body {
   font-family: sans-serif;
 }
 
-.document-title {
+.printable-header {
   display: none;
+}
+
+.document-title {
+  text-align: center;
+  font-size: 200%;
+  font-weight: bold;
+}
+
+.document-subtitle {
+  text-align: center;
+  font-size: 120%;
+  color: gray;
 }
 
 .panel-index {
@@ -57,38 +69,6 @@ body {
   border-radius: 3px;
 }
 
-[method] {
-  background-color: #999999;
-}
-
-[method="OPTIONS"] {
-  background-color: #0f6ab4;
-}
-
-[method="HEAD"] {
-  background-color: #ffd20f;
-}
-
-[method="GET"] {
-  background-color: #0f6ab4;
-}
-
-[method="POST"] {
-  background-color: #10a54a;
-}
-
-[method="PATCH"] {
-  background-color: #D38042;
-}
-
-[method="PUT"] {
-  background-color: #c5862b;
-}
-
-[method="DELETE"] {
-  background-color: #a41e22;
-}
-
 .endpoint-title {
   margin-bottom: 0;
 }
@@ -114,15 +94,22 @@ body {
 }
 
 .title-method button {
-  float: right;
-  margin-top: 2px;
-  margin-right: 2px;
   border: solid gray 1px;
   background-color: transparent;
   border-radius: 2px;
   color: gray;
   cursor: pointer;
   font-weight: bold;
+}
+
+.title-method .right {
+  float: right;
+  margin-top: 3px;
+  margin-right: 3px;
+}
+
+.name-method {
+  font-weight: normal;
 }
 
 .title-method button:hover {
@@ -147,41 +134,72 @@ body {
   margin: 0;
 }
 
-.title-method[method="OPTIONS"] {
-  background-color: #e7f0f7;
-}
+.method[method]           .label-method {background-color: gray;}
+.method[method="OPTIONS"] .label-method {background-color: #0f6ab4;}
+.method[method="HEAD"]    .label-method {background-color: #ffd20f;}
+.method[method="GET"]     .label-method {background-color: #0f6ab4;}
+.method[method="POST"]    .label-method {background-color: #10a54a;}
+.method[method="PATCH"]   .label-method {background-color: #D38042;}
+.method[method="PUT"]     .label-method {background-color: #c5862b;}
+.method[method="DELETE"]  .label-method {background-color: #a41e22;}
 
-.title-method[method="HEAD"] {
-  background-color: #fcffcd;
-}
+.panel-index [method]           {background-color: gray;}
+.panel-index [method="OPTIONS"] {background-color: #0f6ab4;}
+.panel-index [method="HEAD"]    {background-color: #ffd20f;}
+.panel-index [method="GET"]     {background-color: #0f6ab4;}
+.panel-index [method="POST"]    {background-color: #10a54a;}
+.panel-index [method="PATCH"]   {background-color: #D38042;}
+.panel-index [method="PUT"]     {background-color: #c5862b;}
+.panel-index [method="DELETE"]  {background-color: #a41e22;}
 
-.title-method[method="GET"] {
-  background-color: #e7f0f7;
-}
+.method                   .title-method {background-color: silver;}
+.method[method="OPTIONS"] .title-method {background-color: #e7f0f7;}
+.method[method="HEAD"]    .title-method {background-color: #fcffcd;}
+.method[method="GET"]     .title-method {background-color: #e7f0f7;}
+.method[method="POST"]    .title-method {background-color: #e7f6ec;}
+.method[method="PATCH"]   .title-method {background-color: #FCE9E3;}
+.method[method="PUT"]     .title-method {background-color: #f9f2e9;}
+.method[method="DELETE"]  .title-method {background-color: #f5e8e8;}
 
-.title-method[method="POST"] {
-  background-color: #e7f6ec;
-}
-
-.title-method[method="PATCH"] {
-  background-color: #FCE9E3;
-}
-
-.title-method[method="PUT"] {
-  background-color: #f9f2e9;
-}
-
-.title-method[method="DELETE"] {
-  background-color: #f5e8e8;
-}
+.method[method]           .name-method {color: gray;}
+.method[method="OPTIONS"] .name-method {color: #0f6ab4;}
+.method[method="HEAD"]    .name-method {color: #ffd20f;}
+.method[method="GET"]     .name-method {color: #0f6ab4;}
+.method[method="POST"]    .name-method {color: #10a54a;}
+.method[method="PATCH"]   .name-method {color: #D38042;}
+.method[method="PUT"]     .name-method {color: #c5862b;}
+.method[method="DELETE"]  .name-method {color: #a41e22;}
 
 .detail-method {
   border-top: none;
-  padding: 16px 24px;
+  padding: 16px 0;
 }
 
 .detail-method marked > p:first-child {
     margin-top: 0;
+}
+
+.detail-method .method-body {
+  padding: 4px;
+  border: solid silver 1px;
+  margin-bottom: 16px;
+}
+
+.detail-method .method-body[valid-json="false"] {
+  border-color: red;
+}
+
+.detail-method .method-body textarea {
+  border: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  resize: vertical;
+  min-height: 100px;
+}
+
+.detail-method .method-body textarea:focus {
+  outline: none;
 }
 
 .detail-method .response {
@@ -267,16 +285,16 @@ marked pre code {
     margin: auto;
   }
 
-  ::-webkit-scrollbar {
+  .panel-index::-webkit-scrollbar {
       width: 12px;
   }
    
-  ::-webkit-scrollbar-track {
+  .panel-index::-webkit-scrollbar-track {
       -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
       border-radius: 10px;
   }
    
-  ::-webkit-scrollbar-thumb {
+  .panel-index::-webkit-scrollbar-thumb {
       border-radius: 10px;
       background-color: gray;
   }
@@ -293,24 +311,62 @@ marked pre code {
     border: none;
   }
 
-  .document-title {
+  .screen-header {
+    display: none;
+  }
+
+  .printable-header {
     display: block;
+  }
+
+  .document-title {
     padding: 128px 0 16px;
-    text-align: center;
-    font-weight: bold;
     font-size: 64px;
   }
 
-  .title-method {
-    border: solid silver 1px;
+  .document-subtitle {
+    color: gray !important;
   }
 
-  .title-method [method] {
+  .title-method .label-method {
     text-align: left;
+    padding-right: 8px;
+    min-width: 0;
   }
 
   .title-method button {
     display: none;
+  }
+
+  .method-body {
+    border-color: dodgerblue !important;
+  }
+
+  .detail-method .response {
+    border-color: #ffd20f !important;
+  }
+
+  .method[method]           .label-method {color: gray;}
+  .method[method="OPTIONS"] .label-method {color: #0f6ab4;}
+  .method[method="HEAD"]    .label-method {color: #ffd20f;}
+  .method[method="GET"]     .label-method {color: #0f6ab4;}
+  .method[method="POST"]    .label-method {color: #10a54a;}
+  .method[method="PATCH"]   .label-method {color: #D38042;}
+  .method[method="PUT"]     .label-method {color: #c5862b;}
+  .method[method="DELETE"]  .label-method {color: #a41e22;}
+
+  .title-method[method]           {border: solid silver 1px;}
+  .title-method[method="OPTIONS"] {border-color: #0f6ab4;}
+  .title-method[method="HEAD"]    {border-color: #ffd20f;}
+  .title-method[method="GET"]     {border-color: #0f6ab4;}
+  .title-method[method="POST"]    {border-color: #10a54a;}
+  .title-method[method="PATCH"]   {border-color: #D38042;}
+  .title-method[method="PUT"]     {border-color: #c5862b;}
+  .title-method[method="DELETE"]  {border-color: #a41e22;}
+
+
+  marked code {
+    border: solid gray 1px;
   }
 
 }

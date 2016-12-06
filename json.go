@@ -16,6 +16,8 @@ type NodeJson struct {
 type JsonDoc struct {
 	Endpoints    map[string]JsonEndpoint `json:"endpoints"`
 	Interceptors map[string]string       `json:"interceptors"`
+	Title        string                  `json:"title"`
+	Subtitle     string                  `json:"subtitle"`
 }
 
 type JsonEndpoint struct {

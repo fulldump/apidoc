@@ -66,16 +66,40 @@ angular
 						};
 					}
 				}
-			}
 
-			console.log(that.doc);
+				var methods = endpoint.methods;
+				for (var i in methods) {
+					var method = methods[i];
+					if ('POST' == i || 'PATCH' == i || 'PUT' == i) {
+						method.hasbody = true;
+						method.bodyshow = false;
+						method.body = '{\n    \n}';
+					} else {
+						method.hasbody = false;
+					}
+				}
+
+			}
 		},
 		function error(response) {
 
 		}
 	);
 
+	this.valid_json = function(s) {
+		try {
+			JSON.parse(s);
+			return true;
+		} catch (e) {}
+		return false;
+	};
+
 	this.request = function(method, endpoint, item){
+		if (endpoint.methods[method].hasbody && !endpoint.methods[method].bodyshow) {
+			endpoint.methods[method].bodyshow = true;
+			return;
+		}
+
 		var url = [];
 		for (var i in endpoint.url) {
 			var part = endpoint.url[i].name;
@@ -110,6 +134,7 @@ angular
 			transformResponse: [function (data) {
 				return data;
   			}],
+  			data: endpoint.methods[method].body,
 		}).then(cb, cb);
 	};
 
