@@ -25,6 +25,7 @@ type JsonEndpoint struct {
 }
 
 type JsonMethod struct {
+	Name        string `json:"name"`
 	Description string `json:"description"`
 }
 
@@ -78,11 +79,12 @@ func RunJsonDoc(p NodeJson) {
 	for method, _ := range p.Node.Methods {
 		if d, e := p.Node.DocumentationMethods[method]; e {
 			endpoint.Methods[method] = JsonMethod{
+				Name:        d.Name,
 				Description: md_description(d.Description),
 			}
 		} else {
 			endpoint.Methods[method] = JsonMethod{
-				Description: "<undocumented>",
+				Description: "",
 			}
 		}
 	}

@@ -2,9 +2,36 @@ function is_param(p) {
 	return p.length > 1 && p[0] === '{'
 }
 
+function normalize_header(h) {
+	return h.split('-').map(function(w) {
+		return w[0].toUpperCase() + w.substr(1).toLowerCase();
+	}).join('-');
+}
+
 angular
 
 .module('ApiDoc', [])
+
+.directive("contenteditable", function() {
+  return {
+    restrict: "A",
+    require: "ngModel",
+    link: function(scope, element, attrs, ngModel) {
+
+      function read() {
+        ngModel.$setViewValue(element.html());
+      }
+
+      ngModel.$render = function() {
+        element.html(ngModel.$viewValue || "");
+      };
+
+      element.bind("blur keyup change", function() {
+        scope.$apply(read);
+      });
+    }
+  };
+})
 
 .controller('MainCtrl', function($http) {
 
@@ -21,6 +48,8 @@ angular
 			for (var url in endpoints) {
 				var endpoint = endpoints[url];
 
+				endpoint.parameters = {};
+
 				endpoint.url = [];
 				var parts = url.split("/");
 				parts.shift();
@@ -30,28 +59,58 @@ angular
 						name: part,
 						isparam: is_param(part), 
 					});
+					if (is_param(part)) {
+						endpoint.parameters[part] = {
+							name: part,
+							value: part,
+						};
+					}
 				}
 			}
+
+			console.log(that.doc);
 		},
 		function error(response) {
 
 		}
 	);
 
-	this.request = function(method, url, item){
+	this.request = function(method, endpoint, item){
+		var url = [];
+		for (var i in endpoint.url) {
+			var part = endpoint.url[i].name;
+			if (is_param(part)) {
+				var value = endpoint.parameters[part].value;
+				url.push(encodeURIComponent(value));
+			} else {
+				url.push(part);
+			}
+		}
+
+		var cb = function ok(response) {
+			item.response = 'HTTP/1.1 ' + response.status + ' ' + response.statusText + '\n';
+
+			var headers = response.headers();
+			for (var h in headers) {
+				item.response += normalize_header(h) + ': ' + headers[h] + '\n';
+			}
+			item.response += '\n';
+
+			try {
+				var json = JSON.parse(response.data);
+				item.response += JSON.stringify(json, null, 4);
+			} catch (e) {
+				item.response += response.data;
+			}
+		}
+
 		$http({
 			method: method,
-			url: url,
-		}).then(
-			function ok(response) {
-				console.log(response);
-				item.response = response.data;
-			},
-			function error(response) {
-				console.log(response);
-				item.response = response.data;
-			}
-		);
+			url: '/'+url.join('/'),
+			transformResponse: [function (data) {
+				return data;
+  			}],
+		}).then(cb, cb);
 	};
 
 	var that = this;
