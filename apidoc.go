@@ -61,7 +61,7 @@ func Build(a *golax.Api) *Apidoc {
 		`}).
 		Method("GET", func(c *golax.Context) {
 
-			c.Response.Header().Add("Content-Type", "application/json")
+			c.Response.Header().Set("Content-Type", "application/json")
 
 			j := NewNodeJson(a)
 			RunJsonDoc(j)

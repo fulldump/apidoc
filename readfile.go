@@ -27,7 +27,7 @@ func addcontenttype(c *golax.Context, filename string) {
 
 	value, exists := contenttypes[ext]
 	if exists {
-		c.Response.Header().Add("Content-Type", value)
+		c.Response.Header().Set("Content-Type", value)
 	}
 }
 
