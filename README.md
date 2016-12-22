@@ -11,6 +11,7 @@ Autogenerate online documentation for golax REST APIs.
 <!-- MarkdownTOC autolink=true bracket=round depth=4 -->
 
 - [How to use](#how-to-use)
+- [Testing](#testing)
 - [ApiDoc developer](#apidoc-developer)
 
 <!-- /MarkdownTOC -->
@@ -23,8 +24,21 @@ Autogenerate online documentation for golax REST APIs.
 
 ```go
     my_api := golax.NewApi()
-    apidoc.Build(my_api)
+    apidoc.Build(my_api, my_api.Root)
 ```
+
+## Testing
+
+```sh
+make setup && make test
+```
+
+To see code coverage:
+
+```sh
+make setup && make coverage
+```
+
 
 ## ApiDoc developer
 
