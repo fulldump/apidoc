@@ -13,14 +13,14 @@ type Apidoc struct {
 	Subtitle string
 }
 
-func Build(a *golax.Api) *Apidoc {
+func Build(a *golax.Api, parent *golax.Node) *Apidoc {
 
 	apidoc := &Apidoc{
 		Title:    "Apidoc",
 		Subtitle: "Api documentation",
 	}
 
-	doc := a.Root.
+	doc := parent.
 		Node("doc").
 		Doc(golax.Doc{Ommit: true, Description: `
 			This API sub tree is dedicated to self-documentation. It contains documentation

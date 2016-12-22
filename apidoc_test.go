@@ -2,73 +2,82 @@ package apidoc
 
 import (
 	"fmt"
+	"reflect"
 	"testing"
+
+	"github.com/fulldump/apitest"
+	"github.com/fulldump/golax"
 )
 
-func Test_md_crop_tabs_happy_path(t *testing.T) {
-	text := `
-			This is my text comment with some blank lines
+func Test_apidoc_happyPath(t *testing.T) {
 
-			And some indented code:
+	a := golax.NewApi()
 
-			´´´json
+	// Implement my api
+	a.Root.Node("my-api").Method("GET", func(c *golax.Context) {
+		// Do nothing
+	}, golax.Doc{
+		Name:        `Feature`,
+		Description: `Feature description`,
+	})
 
-				{
-					"name": "fulanitez",
-					"address": {
-						"street": "Elm",
-						"number": 7
-					}
-				}
+	// Add custom endpoint to mount apidoc
+	myendpoint := a.Root.Node("a").Node("b").Node("c")
 
-			´´´
-	`
+	// Build apidoc on custom endpoint
+	d := Build(a, myendpoint)
+	d.Title = `My custom title`
+	d.Subtitle = `My custom subtitle`
 
-	expected := `
-This is my text comment with some blank lines
+	// Test
+	at := apitest.New(a)
 
-And some indented code:
+	r := at.Request("GET", "/a/b/c/doc/json").Do()
 
-´´´json
+	expected := map[string]interface{}{
+		"title":    "My custom title",
+		"subtitle": "My custom subtitle",
+		"endpoints": map[string]interface{}{
+			"": map[string]interface{}{
 
-	{
-		"name": "fulanitez",
-		"address": {
-			"street": "Elm",
-			"number": 7
-		}
+				"description":  "",
+				"interceptors": []interface{}{},
+				"methods":      map[string]interface{}{},
+			},
+			"/a": map[string]interface{}{
+				"description":  "",
+				"interceptors": []interface{}{},
+				"methods":      map[string]interface{}{},
+			},
+			"/a/b": map[string]interface{}{
+				"description":  "",
+				"interceptors": []interface{}{},
+				"methods":      map[string]interface{}{},
+			},
+			"/a/b/c": map[string]interface{}{
+				"description":  "",
+				"interceptors": []interface{}{},
+				"methods":      map[string]interface{}{},
+			},
+			"/my-api": map[string]interface{}{
+				"description":  "",
+				"interceptors": []interface{}{},
+				"methods": map[string]interface{}{
+					"GET": map[string]interface{}{
+						"name":        "Feature",
+						"description": "Feature description",
+					},
+				},
+			},
+		},
+		"interceptors": map[string]interface{}{},
 	}
 
-´´´
-	`
+	body := r.BodyJson()
 
-	processed := md_crop_tabs(text)
-
-	if expected != processed {
-		fmt.Println(expected)
-		fmt.Println(processed)
-		t.Error("Result does not match.")
-	}
-
-}
-
-func Test_md_crop_tabs_first_line(t *testing.T) {
-	text := `This is my text comment with some blank lines
-
-			And some indented code:
-	`
-
-	expected := `This is my text comment with some blank lines
-
-And some indented code:
-	`
-
-	processed := md_crop_tabs(text)
-
-	if expected != processed {
-		fmt.Println(expected)
-		fmt.Println(processed)
-		t.Error("Result does not match.")
+	if !reflect.DeepEqual(body, expected) {
+		t.Error("Body json does not match")
+		fmt.Println(body)
 	}
 
 }
