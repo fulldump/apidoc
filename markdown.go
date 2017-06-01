@@ -106,7 +106,7 @@ func PrintApiMd(p NodePrint) {
 	if is_root {
 		p.Println("# API Documentation")
 	} else {
-		p.Path += "/" + p.Node.Path
+		p.Path += "/" + p.Node.GetPath()
 		p.Println("\n## " + p.Path + "\n")
 	}
 
