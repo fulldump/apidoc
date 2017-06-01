@@ -62,7 +62,7 @@ func RunJsonDoc(p NodeJson) {
 
 	// Title
 	if !is_root {
-		p.Path += "/" + p.Node.Path
+		p.Path += "/" + p.Node.GetPath()
 	}
 
 	endpoint := JsonEndpoint{
@@ -93,6 +93,10 @@ func RunJsonDoc(p NodeJson) {
 
 	p.JsonDoc.Endpoints[p.Path] = endpoint
 
+	for _, operation := range p.Node.Operations {
+		RunJsonDocOperation(p, operation)
+	}
+
 	// Document children
 	for _, child := range p.Node.Children {
 		p.Node = child
@@ -106,4 +110,39 @@ func RunJsonDoc(p NodeJson) {
 			p.JsonDoc.Interceptors[name] = description
 		}
 	}
+}
+
+/*
+type JsonDoc struct {
+	Endpoints    map[string]JsonEndpoint `json:"endpoints"`
+	Interceptors map[string]string       `json:"interceptors"`
+	Title        string                  `json:"title"`
+	Subtitle     string                  `json:"subtitle"`
+}
+*/
+
+func RunJsonDocOperation(p NodeJson, o *golax.Operation) {
+	e := JsonEndpoint{
+		Description:  "", // TODO: add a documentation structure :S
+		Interceptors: []string{},
+		Methods:      map[string]JsonMethod{},
+	}
+
+	p.Path += ":" + o.Path
+
+	for _, v := range p.CurrentInterceptors {
+		name := v.Documentation.Name
+		e.Interceptors = append(e.Interceptors, name)
+	}
+
+	// Add methods
+	for method, _ := range o.Methods {
+		e.Methods[method] = JsonMethod{
+			Name:        o.Path,
+			Description: "operation description!",
+		}
+	}
+
+	p.JsonDoc.Endpoints[p.Path] = e
+
 }
