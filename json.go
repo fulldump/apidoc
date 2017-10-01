@@ -10,6 +10,7 @@ type NodeJson struct {
 	Level               int
 	AllInterceptors     map[*golax.Interceptor]*golax.Interceptor
 	CurrentInterceptors []*golax.Interceptor
+	DeepInterceptors    []*golax.Interceptor
 	JsonDoc             *JsonDoc
 }
 
@@ -39,6 +40,7 @@ func NewNodeJson(api *golax.Api) NodeJson {
 		Level:               0,
 		AllInterceptors:     map[*golax.Interceptor]*golax.Interceptor{},
 		CurrentInterceptors: []*golax.Interceptor{},
+		DeepInterceptors:    []*golax.Interceptor{},
 		JsonDoc: &JsonDoc{
 			Endpoints:    map[string]JsonEndpoint{},
 			Interceptors: map[string]string{},
@@ -57,6 +59,11 @@ func RunJsonDoc(p NodeJson) {
 		p.CurrentInterceptors = append(p.CurrentInterceptors, i)
 	}
 
+	for _, i := range p.Node.InterceptorsDeep {
+		p.AllInterceptors[i] = i
+		p.DeepInterceptors = append([]*golax.Interceptor{i}, p.DeepInterceptors...)
+	}
+
 	is_root := 0 == p.Level
 	p.Level++
 
@@ -73,6 +80,10 @@ func RunJsonDoc(p NodeJson) {
 
 	// Add interceptors
 	for _, v := range p.CurrentInterceptors {
+		name := v.Documentation.Name
+		endpoint.Interceptors = append(endpoint.Interceptors, name)
+	}
+	for _, v := range p.DeepInterceptors {
 		name := v.Documentation.Name
 		endpoint.Interceptors = append(endpoint.Interceptors, name)
 	}

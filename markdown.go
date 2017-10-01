@@ -15,6 +15,7 @@ type NodePrint struct {
 	Level               int
 	AllInterceptors     map[*golax.Interceptor]*golax.Interceptor
 	CurrentInterceptors []*golax.Interceptor
+	DeepInterceptors    []*golax.Interceptor
 }
 
 func (np *NodePrint) Println(s string) {
@@ -85,6 +86,7 @@ func md_crop_tabs(d string) string {
 func md_description(d string) string {
 	d = md_crop_tabs(d)
 	d = strings.Replace(d, "\n´´´", "\n```", -1)
+	//d = strings.Replace(d, "´", "`", -1)
 	return d
 }
 
@@ -97,6 +99,10 @@ func PrintApiMd(p NodePrint) {
 	for _, i := range p.Node.Interceptors {
 		p.AllInterceptors[i] = i
 		p.CurrentInterceptors = append(p.CurrentInterceptors, i)
+	}
+	for _, i := range p.Node.InterceptorsDeep {
+		p.AllInterceptors[i] = i
+		p.DeepInterceptors = append([]*golax.Interceptor{i}, p.DeepInterceptors...)
 	}
 
 	is_root := 0 == p.Level
@@ -120,6 +126,11 @@ func PrintApiMd(p NodePrint) {
 			interceptors = "\n**Interceptors applied to all API:** "
 		}
 		for _, v := range p.CurrentInterceptors {
+			name := v.Documentation.Name
+			link := md_link("Interceptor " + name)
+			interceptors += " [`" + name + "`](" + link + ") "
+		}
+		for _, v := range p.DeepInterceptors {
 			name := v.Documentation.Name
 			link := md_link("Interceptor " + name)
 			interceptors += " [`" + name + "`](" + link + ") "
